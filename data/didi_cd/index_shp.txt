@@ -1,0 +1,7 @@
+pop 人口 （人）
+pop_den 人口密度（人/km2）
+road den 路网密度（km/km2）
+inter den 路口密度（个/km2）
+poi_den POI密度（个/km2）
+Ln_popden 人口密度对数  ##可不使用
+price_k 房价（元/km2）
