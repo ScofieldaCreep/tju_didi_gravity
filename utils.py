@@ -74,14 +74,14 @@ def _compute_support_files(db_dir, tile_id_column, tile_geometry, oa_id_column, 
     temp_out = output_areas[[oa_id_column, 'ctrs','area_km2']]
     temp_out.rename(columns={oa_id_column:'geo_code', 'ctrs':'centroid'},inplace=True)
     
-    temp_out.to_csv(db_dir+'/procession/oa_gdf.csv.gz')
+    temp_out.to_csv(db_dir+'/processed/oa_gdf.csv.gz')
     
     oa2centroid = {}
     for i,row in temp_out.iterrows():
         row['centroid'] = literal_eval(row['centroid'])
         oa2centroid[str(row['geo_code'])] = row['centroid']
         
-    with open(db_dir+'/procession/oa2centroid.pkl', 'wb') as handle:
+    with open(db_dir+'/processed/oa2centroid.pkl', 'wb') as handle:
         pickle.dump(oa2centroid, handle)
     
     output_areas.drop(columns=[oa_geometry], inplace=True)
@@ -97,13 +97,13 @@ def _compute_support_files(db_dir, tile_id_column, tile_geometry, oa_id_column, 
     flows = flows[[flow_origin_column, flow_destination_column, flow_flows_column]]
     
     flows.rename(columns={flow_origin_column:'residence', flow_destination_column:'workplace', flow_flows_column:'commuters'},inplace=True)
-    flows.to_csv(db_dir+'/procession/flows_oa.csv.zip')
+    flows.to_csv(db_dir+'/processed/flows_oa.csv.zip')
     
     od2flow = {}
     for i,row in flows.iterrows():
         od2flow[(row['residence'],row['workplace'])] = row['commuters']
         
-    with open(db_dir+'/procession/od2flow.pkl', 'wb') as handle:
+    with open(db_dir+'/processed/od2flow.pkl', 'wb') as handle:
         pickle.dump(od2flow, handle)
     
     features = pd.read_csv(db_dir+'/features.csv', dtype={oa_id_column:str})
@@ -111,7 +111,7 @@ def _compute_support_files(db_dir, tile_id_column, tile_geometry, oa_id_column, 
     oa2features = {}
     for i,row in features.iterrows():
         oa2features[row[1]]=list(row[2:].values)
-    with open(db_dir+'/procession/oa2features.pkl', 'wb') as handle:
+    with open(db_dir+'/processed/oa2features.pkl', 'wb') as handle:
         pickle.dump(oa2features, handle)
     
     tileid2oa2handmade_features = dict()
